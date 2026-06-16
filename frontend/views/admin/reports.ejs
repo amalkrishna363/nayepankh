@@ -1,90 +1,76 @@
-<%- include('_layout_start', {
-  title: 'Reports', page: 'reports',
-  breadcrumb: '<span>Reports & Analytics</span>',
-  head: '<script src="https://cdn.jsdelivr.net/npm/chart.js@4/dist/chart.umd.min.js"><\/script>'
-}) %>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Reports | Nayapankh Admin</title>
+  <link rel="stylesheet" href="/style.css">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4/dist/chart.umd.min.js"></script>
+</head>
+<body>
+  <%- include('_nav', { page: 'reports' }) %>
+  <main>
+    <h1 style="margin-bottom:1.5rem">Reports & Analytics</h1>
 
-<div class="admin-page-header">
-  <h1 class="admin-page-title">Reports & Analytics</h1>
-  <a href="/admin/export" class="btn btn-outline btn-sm">⬇ Export CSV</a>
-</div>
-
-<!-- KPI Cards -->
-<div class="stat-cards">
-  <div class="stat-card sc-purple">
-    <div class="sc-icon">👥</div>
-    <div class="sc-body"><div class="sc-num"><%= total %></div><div class="sc-label">Total Volunteers</div></div>
-  </div>
-  <div class="stat-card sc-green">
-    <div class="sc-icon">✅</div>
-    <div class="sc-body"><div class="sc-num"><%= active %></div><div class="sc-label">Active</div></div>
-  </div>
-  <div class="stat-card sc-yellow">
-    <div class="sc-icon">⏳</div>
-    <div class="sc-body"><div class="sc-num"><%= pending %></div><div class="sc-label">Pending</div></div>
-  </div>
-  <div class="stat-card sc-blue">
-    <div class="sc-icon">📅</div>
-    <div class="sc-body"><div class="sc-num"><%= thisMonth %></div><div class="sc-label">This Month</div></div>
-  </div>
-</div>
-
-<!-- Charts -->
-<div class="charts-grid">
-  <div class="chart-card chart-wide">
-    <div class="chart-card-header">
-      <div class="chart-title">Monthly Registrations</div>
+    <div class="stats-bar mb-2">
+      <div class="stat-chip active"><span class="chip-num"><%= total %></span> Total</div>
+      <div class="stat-chip active-chip active"><span class="chip-num"><%= active %></span> Active</div>
+      <div class="stat-chip pending-chip active"><span class="chip-num"><%= pending %></span> Pending</div>
+      <div class="stat-chip active"><span class="chip-num"><%= thisMonth %></span> This Month</div>
     </div>
-    <canvas id="monthlyChart" height="80"></canvas>
-  </div>
-  <div class="chart-card">
-    <div class="chart-card-header">
-      <div class="chart-title">Volunteer Status</div>
+
+    <div class="charts-grid">
+      <div class="chart-card">
+        <div class="chart-title">Monthly Registrations</div>
+        <canvas id="monthlyChart"></canvas>
+      </div>
+      <div class="chart-card">
+        <div class="chart-title">By Status</div>
+        <canvas id="statusChart"></canvas>
+      </div>
+      <div class="chart-card chart-wide">
+        <div class="chart-title">Top Skills</div>
+        <canvas id="skillChart"></canvas>
+      </div>
     </div>
-    <canvas id="statusChart"></canvas>
-  </div>
-  <div class="chart-card">
-    <div class="chart-card-header">
-      <div class="chart-title">Top Skills</div>
-    </div>
-    <canvas id="skillChart"></canvas>
-  </div>
-</div>
+  </main>
+  <footer><p>© 2025 Nayapankh VMS</p></footer>
 
-<%- include('_layout_end') %>
+  <script>
+    const monthly  = <%- JSON.stringify(monthly) %>;
+    const byStatus = <%- JSON.stringify(byStatus) %>;
+    const skills   = <%- JSON.stringify(skills) %>;
+    const COLORS   = ['#6366f1','#10b981','#f59e0b','#ef4444','#3b82f6','#8b5cf6','#ec4899','#14b8a6','#f97316','#84cc16'];
 
-<script>
-  const monthly  = <%- JSON.stringify(monthly) %>;
-  const byStatus = <%- JSON.stringify(byStatus) %>;
-  const skills   = <%- JSON.stringify(skills) %>;
-  const C = ['#6366f1','#10b981','#f59e0b','#ef4444','#3b82f6','#8b5cf6','#ec4899','#14b8a6','#f97316','#84cc16'];
+    new Chart(document.getElementById('monthlyChart'), {
+      type: 'bar',
+      data: {
+        labels: monthly.map(d => d.month),
+        datasets: [{ label: 'Registrations', data: monthly.map(d => d.count),
+          backgroundColor: '#6366f1', borderRadius: 6 }]
+      },
+      options: { responsive: true, plugins: { legend: { display: false } } }
+    });
 
-  new Chart(document.getElementById('monthlyChart'), {
-    type: 'bar',
-    data: {
-      labels: monthly.map(d => d.month),
-      datasets: [{ label: 'Registrations', data: monthly.map(d => d.count),
-        backgroundColor: '#6366f1', borderRadius: 8, hoverBackgroundColor: '#4f46e5' }]
-    },
-    options: { responsive: true, plugins: { legend: { display: false } },
-      scales: { y: { beginAtZero: true, ticks: { stepSize: 1 } } } }
-  });
+    new Chart(document.getElementById('statusChart'), {
+      type: 'doughnut',
+      data: {
+        labels: byStatus.map(d => d.status),
+        datasets: [{ data: byStatus.map(d => d.count), backgroundColor: COLORS }]
+      },
+      options: { responsive: true, plugins: { legend: { position: 'bottom' } } }
+    });
 
-  new Chart(document.getElementById('statusChart'), {
-    type: 'doughnut',
-    data: {
-      labels: byStatus.map(d => d.status),
-      datasets: [{ data: byStatus.map(d => d.count), backgroundColor: C, borderWidth: 0 }]
-    },
-    options: { responsive: true, plugins: { legend: { position: 'bottom' } }, cutout: '65%' }
-  });
-
-  new Chart(document.getElementById('skillChart'), {
-    type: 'bar',
-    data: {
-      labels: skills.map(d => d.skills),
-      datasets: [{ data: skills.map(d => d.count), backgroundColor: C, borderRadius: 6 }]
-    },
-    options: { indexAxis: 'y', responsive: true, plugins: { legend: { display: false } } }
-  });
-</script>
+    new Chart(document.getElementById('skillChart'), {
+      type: 'bar',
+      data: {
+        labels: skills.map(d => d.skills),
+        datasets: [{ label: 'Count', data: skills.map(d => d.count),
+          backgroundColor: COLORS, borderRadius: 6 }]
+      },
+      options: { responsive: true, plugins: { legend: { display: false } },
+        scales: { x: { ticks: { maxRotation: 30 } } } }
+    });
+  </script>
+</body>
+</html>

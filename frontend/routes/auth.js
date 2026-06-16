@@ -13,22 +13,18 @@ router.post('/login', async (req, res) => {
   try {
     const resp = await client(req).post('/api/v1/admin/login', req.body);
     req.session.adminId = resp.data.adminId;
-    // Forward set-cookie from backend if present
-    const setCookie = resp.headers['set-cookie'];
-    if (setCookie) res.setHeader('Set-Cookie', setCookie);
-    res.redirect('/admin/dashboard');
+    req.session.save(() => res.redirect('/admin/dashboard'));
   } catch (err) {
     res.redirect('/admin/login?error=Invalid+credentials');
   }
 });
 
-router.get('/logout', async (req, res) => {
-  try { await client(req).post('/api/v1/admin/logout'); } catch (_) {}
+router.get('/logout', (req, res) => {
   req.session.destroy();
   res.redirect('/admin/login');
 });
 
-// API Key management pages
+// API Key management
 router.get('/api-keys', requireAdmin, async (req, res) => {
   try {
     const resp = await client(req).get('/api/v1/admin/api-keys');
