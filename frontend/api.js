@@ -8,6 +8,7 @@ const API_KEY  = process.env.API_KEY  || 'vms_live_demo0000';
 function client(req) {
   return axios.create({
     baseURL: BASE_URL,
+    timeout: 30000,
     headers: {
       'X-Api-Key': API_KEY,
       'Cookie': req ? (req.headers.cookie || '') : ''
@@ -18,6 +19,7 @@ function client(req) {
 
 const API = axios.create({
   baseURL: BASE_URL,
+  timeout: 30000,
   headers: { 'X-Api-Key': API_KEY }
 });
 
