@@ -6,50 +6,33 @@
   <title>Admin Login | Nayapankh</title>
   <link rel="stylesheet" href="/style.css">
 </head>
-<body class="login-body">
-  <div class="login-layout">
-    <!-- Left panel -->
-    <div class="login-left">
-      <a href="/" class="login-brand">
-        <span class="brand-icon">🕊️</span>
-        <span class="brand-name">Nayapankh</span>
-      </a>
-      <div class="login-left-content">
-        <h2>Volunteer Information<br>Management System</h2>
-        <p>Manage volunteers, track progress, and generate reports — all in one place.</p>
-        <div class="login-features">
-          <div class="lf-item">✅ Manage volunteer profiles</div>
-          <div class="lf-item">📊 Analytics & reports</div>
-          <div class="lf-item">🔑 REST API access</div>
-          <div class="lf-item">⬇ Export to CSV</div>
-        </div>
+<body>
+  <nav>
+    <div class="nav-brand">🕊️ Nayapankh</div>
+    <div class="nav-links"><a href="/">Volunteer Registration</a></div>
+  </nav>
+  <main class="centered">
+    <div class="card card-sm">
+      <div class="card-header">
+        <div class="icon-circle">🔐</div>
+        <h1>Admin Login</h1>
+        <p>Volunteer Information Management System</p>
       </div>
-      <a href="/" class="login-back">← Back to website</a>
-    </div>
-    <!-- Right: Login form -->
-    <div class="login-right">
-      <div class="login-form-wrap">
-        <div class="login-form-header">
-          <h1>Welcome back</h1>
-          <p>Sign in to the admin portal</p>
+      <% if (error) { %><div class="alert alert-error">❌ <%= error %></div><% } %>
+      <form method="POST" action="/admin/login" class="form">
+        <div class="form-group">
+          <label>Username</label>
+          <input type="text" name="username" placeholder="admin" required autofocus>
         </div>
-        <% if (error) { %>
-        <div class="alert alert-error" style="margin-bottom:1.2rem">❌ <%= error %></div>
-        <% } %>
-        <form method="POST" action="/admin/login" class="form">
-          <div class="form-group">
-            <label>Username</label>
-            <input type="text" name="username" placeholder="Enter username" required autofocus>
-          </div>
-          <div class="form-group">
-            <label>Password</label>
-            <input type="password" name="password" placeholder="Enter password" required>
-          </div>
-          <button type="submit" class="btn btn-primary btn-full" style="margin-top:.5rem">Sign In →</button>
-        </form>
-        <p class="hint" style="margin-top:1.5rem">Default credentials: <code>admin</code> / <code>admin123</code></p>
-      </div>
+        <div class="form-group">
+          <label>Password</label>
+          <input type="password" name="password" placeholder="••••••••" required>
+        </div>
+        <button type="submit" class="btn btn-primary btn-full">Sign In</button>
+      </form>
+      <p class="hint">Default: <code>admin</code> / <code>admin123</code></p>
     </div>
-  </div>
+  </main>
+  <footer><p>© 2025 Nayapankh Volunteer Program</p></footer>
 </body>
 </html>

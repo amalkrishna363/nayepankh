@@ -2,7 +2,6 @@ const express = require('express');
 const router = express.Router();
 const { client } = require('../api');
 const { requireAdmin } = require('../middleware/auth');
-const crypto = require('crypto');
 
 router.get('/login', (req, res) => {
   if (req.session.adminId) return res.redirect('/admin/dashboard');
@@ -15,7 +14,9 @@ router.post('/login', async (req, res) => {
     req.session.adminId = resp.data.adminId;
     req.session.save(() => res.redirect('/admin/dashboard'));
   } catch (err) {
-    res.redirect('/admin/login?error=Invalid+credentials');
+    const msg = err.response?.data?.error || err.message || 'Connection failed';
+    console.error('Login error:', msg, '| API_URL:', process.env.API_URL);
+    res.redirect('/admin/login?error=' + encodeURIComponent(msg));
   }
 });
 
@@ -24,7 +25,6 @@ router.get('/logout', (req, res) => {
   res.redirect('/admin/login');
 });
 
-// API Key management
 router.get('/api-keys', requireAdmin, async (req, res) => {
   try {
     const resp = await client(req).get('/api/v1/admin/api-keys');
