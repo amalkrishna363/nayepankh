@@ -1,7 +1,7 @@
 require('dotenv').config();
 const axios = require('axios');
 
-const BASE_URL = process.env.API_URL || 'http://localhost:3001';
+const BASE_URL = process.env.API_URL || 'https://nayapankh-backend.onrender.com';
 const API_KEY  = process.env.API_KEY  || 'vms_live_demo0000';
 
 // For all calls — always attaches API key

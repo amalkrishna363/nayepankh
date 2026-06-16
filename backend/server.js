@@ -7,9 +7,14 @@ const { initDb } = require('./db');
 const app = express();
 
 const FRONTEND_URL = process.env.FRONTEND_URL || 'http://localhost:3000';
+const allowedOrigins = [FRONTEND_URL, 'http://localhost:3000'].filter(Boolean);
 
 app.use(cors({
-  origin: FRONTEND_URL,
+  origin: (origin, callback) => {
+    if (!origin) return callback(null, true);
+    if (allowedOrigins.includes(origin)) return callback(null, true);
+    callback(new Error('Not allowed by CORS'));
+  },
   credentials: true
 }));
 app.use(express.json());
@@ -37,6 +42,7 @@ const PORT = process.env.PORT || 3001;
 initDb().then(() => {
   app.listen(PORT, () => {
     console.log(`\n🔧 Nayapankh Backend → http://localhost:${PORT}`);
+    console.log(`   FRONTEND_URL   → ${FRONTEND_URL}`);
     console.log(`   Volunteers API → /api/v1/volunteers`);
     console.log(`   Admin API      → /api/v1/admin`);
     console.log(`   Health check   → /health\n`);
