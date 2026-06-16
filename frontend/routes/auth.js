@@ -12,6 +12,9 @@ router.post('/login', async (req, res) => {
   try {
     const resp = await client(req).post('/api/v1/admin/login', req.body);
     req.session.adminId = resp.data.adminId;
+    // Also set a simple admin cookie so browser requests can be recognized
+    const adminCookie = `nayapankh_admin=1; Path=/; HttpOnly; SameSite=Lax${process.env.NODE_ENV === 'production' ? '; Secure' : ''}`;
+    res.append('Set-Cookie', adminCookie);
     req.session.save(() => res.redirect('/admin/dashboard'));
   } catch (err) {
     const msg = err.response?.data?.error || err.message || 'Connection failed';
