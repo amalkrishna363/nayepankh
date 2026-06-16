@@ -1,0 +1,23 @@
+node_modules/
+backend/node_modules/
+frontend/node_modules/
+
+# SQLite (old)
+*.sqlite
+data.sqlite
+
+# Environment variables — NEVER commit these
+.env
+backend/.env
+frontend/.env
+
+# Logs
+*.log
+npm-debug.log*
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Test files
+test-render.js

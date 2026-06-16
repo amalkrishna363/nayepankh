@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title><%= typeof title !== 'undefined' ? title + ' | ' : '' %>Nayapankh</title>
+  <link rel="stylesheet" href="/style.css">
+  <%- typeof head !== 'undefined' ? head : '' %>
+</head>
+<body class="site">
+
+<header class="site-header">
+  <div class="site-header-inner">
+    <a href="/" class="site-brand">
+      <span class="brand-icon">🕊️</span>
+      <span class="brand-name">Nayapankh</span>
+    </a>
+    <nav class="site-nav" id="siteNav">
+      <a href="/" class="<%= page==='home'?'active':'' %>">Home</a>
+      <a href="/about" class="<%= page==='about'?'active':'' %>">About</a>
+      <a href="/contact" class="<%= page==='contact'?'active':'' %>">Contact</a>
+    </nav>
+    <div class="site-nav-actions">
+      <a href="/register" class="btn btn-primary btn-sm">Volunteer Now</a>
+      <a href="/admin/login" class="btn btn-ghost btn-sm">Admin</a>
+      <button class="menu-toggle" id="menuToggle" aria-label="Toggle menu">☰</button>
+    </div>
+  </div>
+</header>

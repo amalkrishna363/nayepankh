@@ -1,0 +1,76 @@
+<%- include('_layout_start', {
+  title: v.name, page: 'dashboard',
+  breadcrumb: '<a href="/admin/dashboard">Dashboard</a> <span class="bc-sep">›</span> <span>' + v.name + '</span>'
+}) %>
+
+<div class="admin-page-header">
+  <div>
+    <h1 class="admin-page-title"><%= v.name %></h1>
+    <span class="badge badge-<%= v.status.toLowerCase() %>"><%= v.status %></span>
+  </div>
+  <div class="btn-group">
+    <a href="/admin/volunteer/<%= v.id %>/edit" class="btn btn-primary">✏️ Edit</a>
+    <form method="POST" action="/admin/volunteer/<%= v.id %>/delete"
+          onsubmit="return confirm('Permanently delete <%= v.name %>?')">
+      <button class="btn btn-danger-outline">🗑 Delete</button>
+    </form>
+  </div>
+</div>
+
+<div class="profile-layout">
+  <!-- Left: Avatar card -->
+  <div class="profile-sidebar-card">
+    <div class="psc-avatar"><%= v.name.charAt(0).toUpperCase() %></div>
+    <div class="psc-name"><%= v.name %></div>
+    <span class="badge badge-<%= v.status.toLowerCase() %>" style="margin:.4rem auto 0;display:block;width:fit-content"><%= v.status %></span>
+    <div class="psc-divider"></div>
+    <div class="psc-info-row"><span>📧</span> <%= v.email %></div>
+    <div class="psc-info-row"><span>📞</span> <%= v.phone %></div>
+    <% if(v.address){ %><div class="psc-info-row"><span>📍</span> <%= v.address %></div><% } %>
+    <% if(v.skills){ %>
+    <div class="psc-divider"></div>
+    <div class="psc-label">Skills</div>
+    <div><span class="skill-tag"><%= v.skills %></span></div>
+    <% } %>
+    <div class="psc-divider"></div>
+    <!-- Quick status change -->
+    <div class="psc-label">Change Status</div>
+    <form method="POST" action="/admin/volunteer/<%= v.id %>/status">
+      <select name="status" class="status-sel s-<%= v.status.toLowerCase() %>" onchange="this.form.submit()" style="width:100%">
+        <option <%= v.status==='Pending'  ?'selected':'' %>>Pending</option>
+        <option <%= v.status==='Active'   ?'selected':'' %>>Active</option>
+        <option <%= v.status==='Inactive' ?'selected':'' %>>Inactive</option>
+      </select>
+    </form>
+  </div>
+
+  <!-- Right: Detail cards -->
+  <div class="profile-detail">
+    <div class="detail-section">
+      <div class="detail-section-title">Personal Information</div>
+      <div class="detail-grid">
+        <div class="detail-item"><div class="di-label">Age</div><div class="di-val"><%= v.age %></div></div>
+        <div class="detail-item"><div class="di-label">Gender</div><div class="di-val"><%= v.gender || '—' %></div></div>
+        <div class="detail-item"><div class="di-label">Address</div><div class="di-val"><%= v.address || '—' %></div></div>
+        <div class="detail-item"><div class="di-label">Emergency Contact</div><div class="di-val"><%= v.emergency_contact || '—' %></div></div>
+      </div>
+    </div>
+    <div class="detail-section">
+      <div class="detail-section-title">Volunteer Details</div>
+      <div class="detail-grid">
+        <div class="detail-item"><div class="di-label">Skills</div><div class="di-val"><%= v.skills || '—' %></div></div>
+        <div class="detail-item"><div class="di-label">Availability</div><div class="di-val"><%= v.availability || '—' %></div></div>
+        <div class="detail-item"><div class="di-label">Registered On</div><div class="di-val"><%= new Date(v.created_at).toLocaleString('en-IN') %></div></div>
+        <div class="detail-item"><div class="di-label">Last Updated</div><div class="di-val"><%= new Date(v.updated_at).toLocaleString('en-IN') %></div></div>
+      </div>
+    </div>
+    <% if(v.notes) { %>
+    <div class="detail-section">
+      <div class="detail-section-title">Admin Notes</div>
+      <div class="notes-block"><%= v.notes %></div>
+    </div>
+    <% } %>
+  </div>
+</div>
+
+<%- include('_layout_end') %>

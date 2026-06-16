@@ -1,0 +1,71 @@
+<%- include('_layout_start', {
+  title: 'API Keys', page: 'apikeys',
+  breadcrumb: '<span>API Keys</span>'
+}) %>
+
+<div class="admin-page-header">
+  <div>
+    <h1 class="admin-page-title">API Keys</h1>
+    <p style="color:var(--sub);margin-top:.2rem;font-size:.9rem">Authenticate REST API calls via <code>X-Api-Key</code> header.</p>
+  </div>
+</div>
+
+<% if (newKey) { %>
+<div class="alert alert-success alert-lg" style="max-width:720px;margin-bottom:1.5rem">
+  <span class="alert-icon">🔑</span>
+  <div>
+    <strong>New API Key Generated</strong>
+    <p style="margin:.3rem 0 .5rem">Copy it now — this will not be shown again.</p>
+    <code class="key-display"><%= newKey %></code>
+  </div>
+</div>
+<% } %>
+
+<div class="form-card" style="max-width:720px;margin-bottom:1.5rem">
+  <form method="POST" action="/admin/api-keys" class="form" style="flex-direction:row;align-items:flex-end;gap:.75rem">
+    <div class="form-group" style="flex:1">
+      <label>Key Label</label>
+      <input type="text" name="label" placeholder="e.g. Mobile App, External Integration" required>
+    </div>
+    <button class="btn btn-primary">Generate Key</button>
+  </form>
+</div>
+
+<div class="table-card" style="max-width:720px;margin-bottom:2rem">
+  <% if (!keys.length) { %>
+    <div class="empty-state"><div class="empty-icon">🔑</div><p>No API keys yet.</p></div>
+  <% } else { %>
+  <table>
+    <thead><tr><th>Label</th><th>Key Prefix</th><th>Created</th><th></th></tr></thead>
+    <tbody>
+      <% keys.forEach(k => { %>
+      <tr>
+        <td><strong><%= k.label %></strong></td>
+        <td><code><%= k.key_prefix %>…</code></td>
+        <td class="td-muted"><%= new Date(k.created_at).toLocaleDateString('en-IN') %></td>
+        <td>
+          <form method="POST" action="/admin/api-keys/delete/<%= k.id %>"
+                onsubmit="return confirm('Revoke key: <%= k.label %>?')">
+            <button class="btn btn-xs btn-danger">Revoke</button>
+          </form>
+        </td>
+      </tr>
+      <% }) %>
+    </tbody>
+  </table>
+  <% } %>
+</div>
+
+<div class="form-card" style="max-width:720px">
+  <div class="form-section-title" style="margin-bottom:1rem">📖 API Reference</div>
+  <div class="api-ref">
+    <div class="api-row"><span class="method get">GET</span>    <code>/api/v1/volunteers</code><span class="api-desc">List all — supports <code>?status=</code> <code>?skills=</code> <code>?page=</code> <code>?limit=</code></span></div>
+    <div class="api-row"><span class="method get">GET</span>    <code>/api/v1/volunteers/:id</code><span class="api-desc">Get a single volunteer</span></div>
+    <div class="api-row"><span class="method post">POST</span>  <code>/api/v1/volunteers</code><span class="api-desc">Create a new volunteer</span></div>
+    <div class="api-row"><span class="method patch">PATCH</span><code>/api/v1/volunteers/:id</code><span class="api-desc">Partial update of any field</span></div>
+    <div class="api-row"><span class="method del">DELETE</span> <code>/api/v1/volunteers/:id</code><span class="api-desc">Permanently delete</span></div>
+  </div>
+  <p style="margin-top:1rem;font-size:.82rem;color:var(--muted)">All requests must include <code>X-Api-Key: &lt;your-key&gt;</code> in the request headers.</p>
+</div>
+
+<%- include('_layout_end') %>

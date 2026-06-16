@@ -1,0 +1,135 @@
+<%- include('_layout_start', {
+  title: 'Dashboard', page: 'dashboard',
+  breadcrumb: '<span>Dashboard</span>'
+}) %>
+
+<!-- Stat Cards -->
+<div class="admin-page-header">
+  <h1 class="admin-page-title">Volunteer Dashboard</h1>
+  <a href="/register" target="_blank" class="btn btn-primary btn-sm">+ Add Volunteer</a>
+</div>
+
+<div class="stat-cards">
+  <div class="stat-card sc-purple">
+    <div class="sc-icon">👥</div>
+    <div class="sc-body">
+      <div class="sc-num"><%= stats.total %></div>
+      <div class="sc-label">Total Volunteers</div>
+    </div>
+  </div>
+  <div class="stat-card sc-green">
+    <div class="sc-icon">✅</div>
+    <div class="sc-body">
+      <div class="sc-num"><%= stats.active %></div>
+      <div class="sc-label">Active</div>
+    </div>
+  </div>
+  <div class="stat-card sc-yellow">
+    <div class="sc-icon">⏳</div>
+    <div class="sc-body">
+      <div class="sc-num"><%= stats.pending %></div>
+      <div class="sc-label">Pending</div>
+    </div>
+  </div>
+  <div class="stat-card sc-gray">
+    <div class="sc-icon">💤</div>
+    <div class="sc-body">
+      <div class="sc-num"><%= stats.inactive %></div>
+      <div class="sc-label">Inactive</div>
+    </div>
+  </div>
+</div>
+
+<!-- Filter Tabs -->
+<div class="filter-tabs">
+  <a href="/admin/dashboard" class="ftab <%= !status?'active':'' %>">All</a>
+  <a href="/admin/dashboard?status=Active"   class="ftab ftab-green   <%= status==='Active'?'active':'' %>">Active</a>
+  <a href="/admin/dashboard?status=Pending"  class="ftab ftab-yellow  <%= status==='Pending'?'active':'' %>">Pending</a>
+  <a href="/admin/dashboard?status=Inactive" class="ftab ftab-gray    <%= status==='Inactive'?'active':'' %>">Inactive</a>
+</div>
+
+<!-- Search + Table -->
+<div class="table-card">
+  <div class="table-card-header">
+    <form method="GET" action="/admin/dashboard" class="search-form">
+      <input type="hidden" name="status" value="<%= status %>">
+      <div class="search-input-wrap">
+        <span class="search-icon">🔍</span>
+        <input type="text" name="q" value="<%= q %>" placeholder="Search name, email, phone, skills…">
+      </div>
+      <button type="submit" class="btn btn-secondary btn-sm">Search</button>
+      <% if (q || status) { %><a href="/admin/dashboard" class="btn btn-ghost btn-sm">✕</a><% } %>
+    </form>
+    <div class="table-meta">Showing <strong><%= volunteers.length %></strong> of <strong><%= total %></strong></div>
+  </div>
+
+  <% if (!volunteers.length) { %>
+    <div class="empty-state">
+      <div class="empty-icon">📋</div>
+      <h3>No volunteers found</h3>
+      <p>Try adjusting your search or filter criteria.</p>
+    </div>
+  <% } else { %>
+  <div class="table-scroll">
+    <table>
+      <thead>
+        <tr>
+          <th>#</th><th>Volunteer</th><th>Phone</th><th>Age</th>
+          <th>Skills</th><th>Availability</th><th>Status</th><th>Registered</th><th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% volunteers.forEach((v, i) => { %>
+        <tr>
+          <td class="td-muted"><%= (page-1)*10 + i + 1 %></td>
+          <td class="td-volunteer">
+            <div class="tv-avatar"><%= v.name.charAt(0).toUpperCase() %></div>
+            <div>
+              <a href="/admin/volunteer/<%= v.id %>" class="name-link"><%= v.name %></a>
+              <div class="td-sub"><%= v.email %></div>
+            </div>
+          </td>
+          <td><%= v.phone %></td>
+          <td><%= v.age %></td>
+          <td><% if(v.skills){ %><span class="skill-tag"><%= v.skills %></span><% }else{ %><span class="td-muted">—</span><% } %></td>
+          <td><%= v.availability || '—' %></td>
+          <td>
+            <form method="POST" action="/admin/volunteer/<%= v.id %>/status">
+              <select name="status" class="status-sel s-<%= v.status.toLowerCase() %>" onchange="this.form.submit()">
+                <option <%= v.status==='Pending'  ?'selected':'' %>>Pending</option>
+                <option <%= v.status==='Active'   ?'selected':'' %>>Active</option>
+                <option <%= v.status==='Inactive' ?'selected':'' %>>Inactive</option>
+              </select>
+            </form>
+          </td>
+          <td class="td-muted"><%= new Date(v.created_at).toLocaleDateString('en-IN') %></td>
+          <td>
+            <div class="row-actions">
+              <a href="/admin/volunteer/<%= v.id %>" class="ra-btn ra-view" title="View">👁</a>
+              <a href="/admin/volunteer/<%= v.id %>/edit" class="ra-btn ra-edit" title="Edit">✏️</a>
+              <form method="POST" action="/admin/volunteer/<%= v.id %>/delete"
+                    onsubmit="return confirm('Delete <%= v.name %>?')">
+                <button class="ra-btn ra-del" title="Delete">🗑</button>
+              </form>
+            </div>
+          </td>
+        </tr>
+        <% }) %>
+      </tbody>
+    </table>
+  </div>
+
+  <% if (totalPages > 1) { %>
+  <div class="pagination">
+    <% if(page > 1) { %><a href="/admin/dashboard?q=<%= q %>&status=<%= status %>&page=<%= page-1 %>" class="pg-btn">‹ Prev</a><% } %>
+    <% for(let p=1; p<=totalPages; p++) { %>
+      <a href="/admin/dashboard?q=<%= q %>&status=<%= status %>&page=<%= p %>"
+         class="pg-btn <%= p===page?'active':'' %>"><%= p %></a>
+    <% } %>
+    <% if(page < totalPages) { %><a href="/admin/dashboard?q=<%= q %>&status=<%= status %>&page=<%= page+1 %>" class="pg-btn">Next ›</a><% } %>
+  </div>
+  <% } %>
+  <% } %>
+</div>
+
+<%- include('_layout_end') %>

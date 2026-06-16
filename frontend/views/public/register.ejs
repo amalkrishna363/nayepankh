@@ -1,0 +1,109 @@
+<%- include('_header', { title: 'Register', page: 'register', head: '' }) %>
+
+<section class="page-hero page-hero-sm">
+  <div class="page-hero-inner">
+    <div class="breadcrumb"><a href="/">Home</a> <span>›</span> Register</div>
+    <h1>Volunteer Registration</h1>
+    <p>Fill in the form below to join our volunteer community.</p>
+  </div>
+</section>
+
+<section class="section">
+  <div class="section-inner section-inner-narrow">
+
+    <% if (success) { %>
+    <div class="alert alert-success alert-lg">
+      <span class="alert-icon">✅</span>
+      <div>
+        <strong>Registration Successful!</strong>
+        <p><%= success %></p>
+      </div>
+    </div>
+    <% } %>
+    <% if (error) { %>
+    <div class="alert alert-error alert-lg">
+      <span class="alert-icon">❌</span>
+      <div><strong>Error</strong><p><%= error %></p></div>
+    </div>
+    <% } %>
+
+    <div class="form-card">
+      <form method="POST" action="/register" class="form" id="regForm">
+        <div class="form-section">
+          <div class="form-section-title">
+            <span class="fsnum">1</span> Personal Information
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label>Full Name <span class="req">*</span></label>
+              <input type="text" name="name" placeholder="e.g. Riya Sharma" required>
+            </div>
+            <div class="form-group">
+              <label>Gender</label>
+              <select name="gender">
+                <option value="">Prefer not to say</option>
+                <option>Male</option><option>Female</option><option>Other</option>
+              </select>
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label>Email Address <span class="req">*</span></label>
+              <input type="email" name="email" placeholder="you@example.com" required>
+            </div>
+            <div class="form-group">
+              <label>Phone Number <span class="req">*</span></label>
+              <input type="tel" name="phone" placeholder="+91 99999 00000" required>
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label>Age <span class="req">*</span></label>
+              <input type="number" name="age" min="14" max="100" placeholder="18" required>
+            </div>
+            <div class="form-group">
+              <label>Emergency Contact</label>
+              <input type="text" name="emergency_contact" placeholder="Name & phone number">
+            </div>
+          </div>
+          <div class="form-group">
+            <label>Address / City</label>
+            <input type="text" name="address" placeholder="e.g. Mumbai, Maharashtra">
+          </div>
+        </div>
+
+        <div class="form-section">
+          <div class="form-section-title">
+            <span class="fsnum">2</span> Volunteer Preferences
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label>Skills / Expertise</label>
+              <input type="text" name="skills" placeholder="e.g. Teaching, Medical, IT, Cooking">
+              <span class="field-hint">Separate multiple skills with commas</span>
+            </div>
+            <div class="form-group">
+              <label>Availability</label>
+              <select name="availability">
+                <option value="">Select your availability…</option>
+                <option>Weekdays</option>
+                <option>Weekends</option>
+                <option>Both</option>
+                <option>Full-time</option>
+              </select>
+            </div>
+          </div>
+        </div>
+
+        <div class="form-submit-row">
+          <button type="submit" class="btn btn-primary btn-lg">
+            Submit Registration →
+          </button>
+          <p class="form-note">By registering, you agree to our volunteer terms and privacy policy.</p>
+        </div>
+      </form>
+    </div>
+  </div>
+</section>
+
+<%- include('_footer') %>

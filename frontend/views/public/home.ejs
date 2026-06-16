@@ -1,0 +1,144 @@
+<%- include('_header', { title: 'Home', page: 'home', head: '' }) %>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-inner">
+    <div class="hero-badge">🌱 Making a Difference Since 2020</div>
+    <h1 class="hero-title">
+      Give Your Time,<br>
+      <span class="hero-accent">Change Lives</span>
+    </h1>
+    <p class="hero-sub">
+      Nayapankh connects passionate volunteers with communities that need them most.
+      Join hundreds of changemakers across India.
+    </p>
+    <div class="hero-actions">
+      <a href="/register" class="btn btn-hero">Become a Volunteer →</a>
+      <a href="/about" class="btn btn-hero-outline">Learn More</a>
+    </div>
+    <div class="hero-stats">
+      <div class="hero-stat">
+        <span class="hstat-num" data-target="<%= total %>"><%= total %></span>
+        <span class="hstat-label">Registered Volunteers</span>
+      </div>
+      <div class="hero-stat-divider"></div>
+      <div class="hero-stat">
+        <span class="hstat-num" data-target="<%= active %>"><%= active %></span>
+        <span class="hstat-label">Active Right Now</span>
+      </div>
+      <div class="hero-stat-divider"></div>
+      <div class="hero-stat">
+        <span class="hstat-num">50+</span>
+        <span class="hstat-label">Communities Served</span>
+      </div>
+    </div>
+  </div>
+  <div class="hero-graphic">
+    <div class="hero-blob"></div>
+    <div class="hero-cards-float">
+      <div class="float-card fc1">🏥 Healthcare</div>
+      <div class="float-card fc2">📚 Education</div>
+      <div class="float-card fc3">🌿 Environment</div>
+      <div class="float-card fc4">🍱 Food Drive</div>
+    </div>
+  </div>
+</section>
+
+<!-- FEATURES -->
+<section class="section" id="features">
+  <div class="section-inner">
+    <div class="section-tag">Why Nayapankh</div>
+    <h2 class="section-title">Everything you need to start volunteering</h2>
+    <div class="features-grid">
+      <div class="feature-card">
+        <div class="feature-icon">🚀</div>
+        <h3>Quick Registration</h3>
+        <p>Sign up in under 2 minutes. No paperwork, no hassle — just fill in your details and you're in.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">🎯</div>
+        <h3>Skill Matching</h3>
+        <p>We match volunteers to opportunities that align with their skills and availability.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">📊</div>
+        <h3>Impact Tracking</h3>
+        <p>Real-time dashboards track hours contributed, communities reached, and lives impacted.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">🔒</div>
+        <h3>Secure & Private</h3>
+        <p>Your data is protected with industry-standard encryption and access controls.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">📱</div>
+        <h3>Mobile Friendly</h3>
+        <p>Access the platform from any device — phone, tablet, or desktop.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">🤝</div>
+        <h3>Community First</h3>
+        <p>Built by volunteers, for volunteers. Every feature is designed around your experience.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- HOW IT WORKS -->
+<section class="section section-alt" id="how">
+  <div class="section-inner">
+    <div class="section-tag">How It Works</div>
+    <h2 class="section-title">Three simple steps to get started</h2>
+    <div class="steps-row">
+      <div class="step">
+        <div class="step-num">01</div>
+        <h3>Register Online</h3>
+        <p>Fill in the registration form with your contact details, skills, and availability preferences.</p>
+      </div>
+      <div class="step-arrow">→</div>
+      <div class="step">
+        <div class="step-num">02</div>
+        <h3>Get Reviewed</h3>
+        <p>Our team reviews your application and matches you to the right volunteer opportunities.</p>
+      </div>
+      <div class="step-arrow">→</div>
+      <div class="step">
+        <div class="step-num">03</div>
+        <h3>Start Volunteering</h3>
+        <p>Receive your assignment and begin making a real difference in the community.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA BANNER -->
+<section class="cta-section">
+  <div class="cta-inner">
+    <h2>Ready to make an impact?</h2>
+    <p>Join our growing family of volunteers today. It only takes two minutes.</p>
+    <a href="/register" class="btn btn-hero">Register Now — It's Free →</a>
+  </div>
+</section>
+
+<%- include('_footer') %>
+
+<script>
+  // Animate stat numbers on scroll
+  const observer = new IntersectionObserver(entries => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        const el = entry.target;
+        const target = parseInt(el.dataset.target) || 0;
+        let current = 0;
+        const step = Math.max(1, Math.floor(target / 40));
+        const timer = setInterval(() => {
+          current = Math.min(current + step, target);
+          el.textContent = current;
+          if (current >= target) clearInterval(timer);
+        }, 30);
+        observer.unobserve(el);
+      }
+    });
+  }, { threshold: 0.5 });
+  document.querySelectorAll('[data-target]').forEach(el => observer.observe(el));
+</script>

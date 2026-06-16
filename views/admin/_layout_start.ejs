@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title><%= typeof title !== 'undefined' ? title + ' | ' : '' %>Nayapankh Admin</title>
+  <link rel="stylesheet" href="/style.css">
+  <%- typeof head !== 'undefined' ? head : '' %>
+</head>
+<body class="admin-body">
+
+<aside class="sidebar" id="sidebar">
+  <div class="sidebar-logo">
+    <span class="brand-icon">🕊️</span>
+    <span class="brand-name">Nayapankh</span>
+    <button class="sidebar-close" id="sidebarClose">✕</button>
+  </div>
+
+  <div class="sidebar-section-label">Main</div>
+  <nav class="sidebar-nav">
+    <a href="/admin/dashboard" class="slink <%= page==='dashboard'?'active':'' %>">
+      <span class="slink-icon">⊞</span> Dashboard
+    </a>
+    <a href="/admin/reports" class="slink <%= page==='reports'?'active':'' %>">
+      <span class="slink-icon">📊</span> Reports
+    </a>
+  </nav>
+
+  <div class="sidebar-section-label">Manage</div>
+  <nav class="sidebar-nav">
+    <a href="/admin/dashboard?status=Active" class="slink <%= page==='active'?'active':'' %>">
+      <span class="slink-icon">✅</span> Active Volunteers
+    </a>
+    <a href="/admin/dashboard?status=Pending" class="slink <%= page==='pending'?'active':'' %>">
+      <span class="slink-icon">⏳</span> Pending Approvals
+    </a>
+    <a href="/admin/export" class="slink">
+      <span class="slink-icon">⬇</span> Export CSV
+    </a>
+  </nav>
+
+  <div class="sidebar-section-label">Settings</div>
+  <nav class="sidebar-nav">
+    <a href="/admin/api-keys" class="slink <%= page==='apikeys'?'active':'' %>">
+      <span class="slink-icon">🔑</span> API Keys
+    </a>
+    <a href="/" target="_blank" class="slink">
+      <span class="slink-icon">↗</span> View Site
+    </a>
+    <a href="/admin/logout" class="slink slink-danger">
+      <span class="slink-icon">⏏</span> Logout
+    </a>
+  </nav>
+</aside>
+
+<div class="admin-overlay" id="adminOverlay"></div>
+
+<div class="admin-wrap">
+  <div class="admin-topbar">
+    <button class="topbar-menu" id="topbarMenu">☰</button>
+    <div class="topbar-breadcrumb">
+      <%- typeof breadcrumb !== 'undefined' ? breadcrumb : '' %>
+    </div>
+    <div class="topbar-right">
+      <a href="/" target="_blank" class="topbar-link">View Site ↗</a>
+      <div class="topbar-avatar">A</div>
+    </div>
+  </div>
+
+  <div class="admin-content">
