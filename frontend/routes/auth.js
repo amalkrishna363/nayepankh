@@ -27,7 +27,7 @@ router.get('/logout', (req, res) => {
 
 router.get('/api-keys', requireAdmin, async (req, res) => {
   try {
-    const resp = await client(req).get('/api/v1/admin/api-keys');
+    const resp = await client(req).get('/api/v1/admin/api-keys', { headers: { 'X-Api-Key': API_KEY } });
     res.render('admin/api-keys', { keys: resp.data, newKey: req.query.newKey || null });
   } catch (err) {
     res.render('admin/api-keys', { keys: [], newKey: null });
@@ -36,13 +36,13 @@ router.get('/api-keys', requireAdmin, async (req, res) => {
 
 router.post('/api-keys', requireAdmin, async (req, res) => {
   try {
-    const resp = await client(req).post('/api/v1/admin/api-keys', req.body);
+    const resp = await client(req).post('/api/v1/admin/api-keys', req.body, { headers: { 'X-Api-Key': API_KEY } });
     res.redirect('/admin/api-keys?newKey=' + encodeURIComponent(resp.data.key));
   } catch (_) { res.redirect('/admin/api-keys'); }
 });
 
 router.post('/api-keys/delete/:id', requireAdmin, async (req, res) => {
-  try { await client(req).delete('/api/v1/admin/api-keys/' + req.params.id); } catch (_) {}
+  try { await client(req).delete('/api/v1/admin/api-keys/' + req.params.id, { headers: { 'X-Api-Key': API_KEY } }); } catch (_) {}
   res.redirect('/admin/api-keys');
 });
 

@@ -14,7 +14,7 @@ router.get('/dashboard', requireAdmin, async (req, res) => {
         params: { status, page, limit: PER_PAGE },
         headers: { 'X-Api-Key': API_KEY }
       }),
-      client(req).get('/api/v1/admin/stats')
+      client(req).get('/api/v1/admin/stats', { headers: { 'X-Api-Key': API_KEY } })
     ]);
 
     let volunteers = volRes.data.data;
@@ -95,8 +95,8 @@ router.post('/volunteer/:id/delete', requireAdmin, async (req, res) => {
 router.get('/reports', requireAdmin, async (req, res) => {
   try {
     const [statsRes, reportsRes] = await Promise.all([
-      client(req).get('/api/v1/admin/stats'),
-      client(req).get('/api/v1/admin/reports')
+      client(req).get('/api/v1/admin/stats', { headers: { 'X-Api-Key': API_KEY } }),
+      client(req).get('/api/v1/admin/reports', { headers: { 'X-Api-Key': API_KEY } })
     ]);
     res.render('admin/reports', { ...statsRes.data, ...reportsRes.data });
   } catch (_) {
